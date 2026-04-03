@@ -9,7 +9,12 @@ import {CharacterComponent} from '../character.component/character.component';
     ],
     templateUrl: './script.component.html',
     styleUrl: './script.component.css',
+    standalone: true
 })
 export class ScriptComponent {
-    @Input({required: true}) script?: Script;
+    @Input({required: true}) script!: Script;
+
+    constructor() {
+    }
+
 }

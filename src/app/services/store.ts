@@ -15,7 +15,7 @@ export class Store<T> {
 
     public get(): T | undefined {
         try {
-            return JSON.parse(localStorage[this.identifier]);
+            return JSON.parse(localStorage[this.identifier]) as T;
         } catch (e) {
             return undefined;
         }

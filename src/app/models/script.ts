@@ -2,7 +2,6 @@ import {Errors, Message, Severity, Verifiable} from './common';
 import {Metadata} from './metadata';
 import {Character, Team} from './character';
 import {CharacterDetails} from '../dataset/character-details';
-import {Store} from '../services/store';
 import {Memory} from '../services/memory.service';
 
 export class Script implements Verifiable {
@@ -25,22 +24,36 @@ export class Script implements Verifiable {
             .map((element) => CharacterDetails.toCharacter(element));
     }
 
-    static deserialize(json: string): Script {
-        let answer: string | null;
-        do {
-            answer = prompt("(R)avenswood_Bluff or (T)eensyville?", "R");
-        } while (answer !== "R" && answer !== "T");
-        return new Script(
-            JSON.parse(json).map((element: any) => {
-                if (element.id === '_meta')
-                    return Metadata.deserialize(element);
-                if (element.id)
-                    return Character.deserialize(element);
-                return element
-            }),
-            answer === 'T' ? ScriptType.TEENSYVILLE : ScriptType.RAVENSWOOD_BLUFF,
-            crypto.randomUUID()
-        );
+    static deserialize(deadScript: string | Script): Script { /*TODO ugly ahh method*/
+        if (typeof deadScript === "string") {
+            let answer: string | null;
+            do {
+                answer = prompt("(R)avenswood_Bluff or (T)eensyville?", "R");
+            } while (answer !== "R" && answer !== "T");
+
+            return new Script(
+                JSON.parse(deadScript).map((element: any) => {
+                    if (element.id === '_meta')
+                        return Metadata.deserialize(element);
+                    if (element.id)
+                        return Character.deserialize(element);
+                    return element
+                }),
+                answer === 'T' ? ScriptType.TEENSYVILLE : ScriptType.RAVENSWOOD_BLUFF,
+                crypto.randomUUID()
+            );
+        } else
+            return new Script(
+                deadScript.elements.map((element: any) => {
+                    if (element.id === '_meta')
+                        return Metadata.deserialize(element);
+                    if (element.id)
+                        return Character.deserialize(element);
+                    return element
+                }),
+                deadScript.type,
+                deadScript.identifier
+            );
     }
 
     public charactersOf(team: Team): Character[] {

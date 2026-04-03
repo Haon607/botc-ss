@@ -1,8 +1,12 @@
-@if (script) {
-    <span>{{ script.metadata.name }} - {{ script.metadata.author }}</span>
+<span>{{ script.metadata.name }} - {{ script.metadata.author }}</span>
+<ul class="list bg-base-100 rounded-box shadow-md w-80">
+    <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Characters</li>
+
     @for (character of script.characters; track character.id) {
-        <app-character-component [character]="character"></app-character-component>
+        <li class="list-row">
+            <app-character-component [character]="character"></app-character-component>
+        </li>
+
     }
-} @else {
-    <div class="skeleton h-32 w-32"></div>
-}
+</ul>
+

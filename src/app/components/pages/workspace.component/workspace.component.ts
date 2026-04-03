@@ -12,6 +12,7 @@ import {SchemaValidator} from '../../../services/schema-validator';
     ],
     templateUrl: './workspace.component.html',
     styleUrl: './workspace.component.css',
+    standalone: true
 })
 export class WorkspaceComponent {
     protected scripts: Script[];
