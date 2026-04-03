@@ -1,0 +1,4 @@
+<span>{{ script.metadata.name }} - {{ script.metadata.author }}</span>
+@for (character of script.characters; track character.id) {
+    <app-character-component [character]="character"></app-character-component>
+}
