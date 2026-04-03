@@ -45,5 +45,6 @@ export enum Team {
   TOWNSFOLK = 'townsfolk',
   OUTSIDER = 'outsider',
   MINION = 'minion',
-  DEMON = 'demon'
+  DEMON = 'demon',
+  FABLED = 'fabled'
 } //TODO npc, travellers

@@ -1,4 +1,6 @@
-[
+import { Character } from '../model/character';
+
+export characters: Character[] = [
   {
     "id": "washerwoman",
     "name": "Washerwoman",
@@ -1693,10 +1695,7 @@
     "reminders": [],
     "setup": false,
     "ability": "Once per day, you may choose to kill an alive neighbour, if your other alive neighbour agrees."
-  }
-]
-
-[
+  },
   {
     "id": "doomsayer",
     "firstNightReminder": "",
