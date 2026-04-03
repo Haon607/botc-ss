@@ -2,30 +2,26 @@
     <!--TODO edit custom character / convert character-->
     <!--TODO remove character-->
     <div>
-        <img alt="img" class="size-20 rounded-box" src="{{character.image}}" />
+        <img alt="img" class="size-20 rounded-box" src="{{character.details.image}}" />
     </div>
     <div class="flex flex-col">
         <div>
-            <div>{{ character.name }}</div>
+            <div>{{ character.details.name }}</div>
         </div>
         <p class="list-col-wrap text-xs">
-            {{ character.ability }}
+            {{ character.details.ability }}
         </p>
     </div>
     <div class="grow"></div>
     <div class="flex flex-col">
         <button class="btn btn-square btn-ghost">
-            <svg class="size-[1.2em]" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                    <path d="M6 3L20 12 6 21 6 3z"></path>
-                </g>
+            <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
+                <path [attr.d]="isCustomCharacter ? editCustomCharacter : convertToCustomCharacter" />
             </svg>
         </button>
         <button class="btn btn-square btn-ghost">
-            <svg class="size-[1.2em]" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-                </g>
+            <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
+                <path [attr.d]="trash" />
             </svg>
         </button>
     </div>

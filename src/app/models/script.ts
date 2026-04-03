@@ -1,6 +1,6 @@
 import { Errors, Message, Severity, Verifiable } from './common';
 import { Metadata } from './metadata';
-import { Character, Team } from './character';
+import { Character, DetailedCharacter, Team } from './character';
 import { Memory } from '../services/memory.service';
 import { CharacterDetailsService } from '../services/character-details.service';
 
@@ -17,10 +17,15 @@ export class Script implements Verifiable {
         throw new Error(`No element instanceOf Metadata could be found in ${JSON.stringify(this.elements)}`);
     }
 
-    public get characters(): Character[] {
+    public get characters(): DetailedCharacter[] {
         return this.elements
             .filter((element) => typeof element === 'string' || element instanceof Character)
-            .map((element) => this.cDS!.toCharacter(element));
+            .map((element) => {
+                return {
+                    details: this.cDS!.toCharacter(element),
+                    originalElement: element,
+                };
+            });
     }
 
     static deserialize(deadScript: string | Script, cDS: CharacterDetailsService): Script {
@@ -55,8 +60,8 @@ export class Script implements Verifiable {
             );
     }
 
-    public charactersOf(team: Team): Character[] {
-        return this.characters.filter((character) => character.team === team);
+    public charactersOf(team: Team): DetailedCharacter[] {
+        return this.characters.filter((character) => character.details.team === team);
     }
 
     verify(): Errors {

@@ -86,3 +86,8 @@ export enum Team {
     FABLED = 'fabled',
     LORIC = 'loric',
 }
+
+export interface DetailedCharacter {
+    details: Character;
+    originalElement: Character | string;
+}

@@ -1,15 +1,50 @@
-<span>{{ script.metadata.name }} - {{ script.metadata.author }}</span>
-<ul class="list bg-base-100 rounded-box shadow-md">
-    <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Characters</li>
+<div class="flex flex-col h-screen overflow-hidden">
+    <span class="shrink-0 font-extraboldt">
+        <input>
+        {{ script.metadata.name }} - {{ script.metadata.author }}
+    </span>
 
-    @for (character of script.characters; track character.id) {
-        <li class="list-row">
-            <app-character-component
-                [character]="character"
-                class="w-130"
-            />
-        </li>
+    <ul class="flex-1 overflow-auto box-border pb-4 list w-140 bg-base-100 rounded-box shadow-md">
+        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">TOWNSFOLK</li>
+        @for (character of script.charactersOf(Team.TOWNSFOLK); track character.details.id) {
+            <li class="list-row">
+                <app-character-component
+                    [character]="character"
+                    class="w-130"
+                />
+            </li>
+        }
 
-    }
-</ul>
+        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">OUTSIDER</li>
+        @for (character of script.charactersOf(Team.OUTSIDER); track character.details.id) {
+            <li class="list-row">
+                <app-character-component
+                    [character]="character"
+                    class="w-130"
+                />
+            </li>
+        }
+
+        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">MINIONS</li>
+        @for (character of script.charactersOf(Team.MINION); track character.details.id) {
+            <li class="list-row">
+                <app-character-component
+                    [character]="character"
+                    class="w-130"
+                />
+            </li>
+        }
+
+        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">DEMONS</li>
+        @for (character of script.charactersOf(Team.DEMON); track character.details.id) {
+            <li class="list-row">
+                <app-character-component
+                    [character]="character"
+                    class="w-130"
+                />
+            </li>
+        }
+
+    </ul>
+</div>
 

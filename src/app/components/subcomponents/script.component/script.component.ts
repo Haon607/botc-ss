@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Script } from '../../../models/script';
 import { CharacterComponent } from '../character.component/character.component';
+import { Team } from '../../../models/character';
 
 @Component({
     selector: 'app-script-component',
@@ -13,4 +14,6 @@ export class ScriptComponent {
     @Input({ required: true }) script!: Script;
 
     constructor() {}
+
+    protected readonly Team = Team;
 }
