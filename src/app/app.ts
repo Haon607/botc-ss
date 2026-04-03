@@ -1,17 +1,14 @@
-import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {crossInCircle} from './icons';
-import {DialogComponent} from './components/subcomponents/dialog.component/dialog.component';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { crossInCircle } from './icons';
+import { DialogComponent } from './components/subcomponents/dialog.component/dialog.component';
 
 @Component({
     selector: 'app-root',
-    imports: [
-        RouterOutlet,
-        DialogComponent
-    ],
+    imports: [RouterOutlet, DialogComponent],
     templateUrl: './app.html',
     standalone: true,
-    styleUrl: './app.css'
+    styleUrl: './app.css',
 })
 export class App {
     /*

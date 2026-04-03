@@ -1,4 +1,4 @@
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 
 export class Store<T> {
     public changeSubject: Subject<T | undefined>;
@@ -23,6 +23,6 @@ export class Store<T> {
 
     public remove() {
         localStorage.removeItem(this.identifier);
-        this.changeSubject.next(undefined)
+        this.changeSubject.next(undefined);
     }
 }

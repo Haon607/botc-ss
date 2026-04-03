@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {shareReplay, tap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { shareReplay, tap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -10,8 +10,7 @@ export class ResourceHttpService {
     private readonly cache = new Map<string, any>();
     private readonly inFlightRequests = new Map<string, Observable<any>>();
 
-    constructor(private readonly http: HttpClient) {
-    }
+    constructor(private readonly http: HttpClient) {}
 
     get<T>(url: string): Observable<T> {
         if (this.cache.has(url)) {
@@ -23,11 +22,11 @@ export class ResourceHttpService {
         }
 
         const request$ = this.http.get<T>(url).pipe(
-            tap(data => {
+            tap((data) => {
                 this.cache.set(url, data);
                 this.inFlightRequests.delete(url);
             }),
-            shareReplay(1)
+            shareReplay(1),
         );
 
         this.inFlightRequests.set(url, request$);

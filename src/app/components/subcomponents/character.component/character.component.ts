@@ -1,13 +1,13 @@
-import {Component, Input} from '@angular/core';
-import {Character} from '../../../models/character';
+import { Component, Input } from '@angular/core';
+import { Character } from '../../../models/character';
 
 @Component({
     selector: 'app-character-component',
     imports: [],
     templateUrl: './character.component.html',
     styleUrl: './character.component.css',
-    standalone: true
+    standalone: true,
 })
 export class CharacterComponent {
-    @Input({required: true}) character!: Character;
+    @Input({ required: true }) character!: Character;
 }

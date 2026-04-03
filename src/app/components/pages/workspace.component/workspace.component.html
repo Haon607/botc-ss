@@ -8,7 +8,7 @@
 </div>
 
 <div class="fab fab-flower">
-    <button tabindex="0" class="btn btn-lg btn-circle btn-primary">
+    <button class="btn btn-lg btn-circle btn-primary" tabindex="0">
         <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
             <path [attr.d]="plus" />
         </svg>
@@ -27,7 +27,7 @@
     </div>
 
     <div class="tooltip" data-tip="New Script">
-        <button class="btn btn-lg btn-circle btn-primary" (click)="newScript()">
+        <button (click)="newScript()" class="btn btn-lg btn-circle btn-primary">
             <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
                 <path [attr.d]="addScript" />
             </svg>
@@ -38,7 +38,7 @@
 <dialog class="modal" id="paste_modal">
     <div class="modal-box flex flex-row items-center">
         <h3 class="text-lg font-bold grow">Import Script</h3>
-        <button class="btn btn-primary" (click)="pasteImport()">Paste Script</button>
+        <button (click)="pasteImport()" class="btn btn-primary">Paste Script</button>
     </div>
     <form class="modal-backdrop" method="dialog">
         <button>close</button>
