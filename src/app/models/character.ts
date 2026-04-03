@@ -18,7 +18,21 @@ export class Character implements Verifiable {
     ) {}
 
     static deserialize(json: Character): Character {
-        return new Character(json.id, json.name, json.image, json.team, json.ability, json.flavour, json.firstNight, json.firstNightReminder, json.otherNight, json.otherNightReminder, json.reminders, json.remindersGlobal, json.setup);
+        return new Character(
+            json.id,
+            json.name,
+            json.image,
+            json.team,
+            json.ability,
+            json.flavour,
+            json.firstNight,
+            json.firstNightReminder,
+            json.otherNight,
+            json.otherNightReminder,
+            json.reminders,
+            json.remindersGlobal,
+            json.setup,
+        );
     }
 
     verify(): Errors {
@@ -29,13 +43,35 @@ export class Character implements Verifiable {
         if (this.image?.trim() === '') err.messages.push(new Message('Field image empty', Severity.ERROR, this));
         if (this.ability.trim() === '') err.messages.push(new Message('Field ability empty', Severity.ERROR, this));
         if (this.flavour.trim() === '') err.messages.push(new Message('Field flavour empty', Severity.WARN, this));
-        if (this.reminders.some((reminder) => reminder.trim() === '')) err.messages.push(new Message('Field reminders contains an empty entry', Severity.WARN, this));
-        if (this.remindersGlobal.some((reminder) => reminder.trim() === '')) err.messages.push(new Message('Field remindersGlobal contains an empty entry', Severity.WARN, this));
+        if (this.reminders.some((reminder) => reminder.trim() === ''))
+            err.messages.push(new Message('Field reminders contains an empty entry', Severity.WARN, this));
+        if (this.remindersGlobal.some((reminder) => reminder.trim() === ''))
+            err.messages.push(new Message('Field remindersGlobal contains an empty entry', Severity.WARN, this));
 
-        if (this.firstNight === 0 && this.firstNightReminder) err.messages.push(new Message('Field firstNightReminder is set, although field firstNight is 0', Severity.WARN, this));
-        if (this.otherNight === 0 && this.otherNightReminder) err.messages.push(new Message('Field otherNIghtReminder is set, although field otherNight is 0', Severity.WARN, this));
-        if (this.setup !== (this.ability.includes('[') && this.ability.includes(']'))) err.messages.push(new Message('Field setup should be true, when ability includes setup brackets ([])', Severity.WARN, this));
-        if (this.team === Team.DEMON && this.otherNight > 0 && !this.reminders.some((reminder) => reminder.toLowerCase().includes('dead'))) err.messages.push(new Message('If this Character kills in the Night, consider adding a "DEAD" Reminder-Token to the Field reminders ', Severity.INFO, this));
+        if (this.firstNight === 0 && this.firstNightReminder)
+            err.messages.push(
+                new Message('Field firstNightReminder is set, although field firstNight is 0', Severity.WARN, this),
+            );
+        if (this.otherNight === 0 && this.otherNightReminder)
+            err.messages.push(
+                new Message('Field otherNIghtReminder is set, although field otherNight is 0', Severity.WARN, this),
+            );
+        if (this.setup !== (this.ability.includes('[') && this.ability.includes(']')))
+            err.messages.push(
+                new Message('Field setup should be true, when ability includes setup brackets ([])', Severity.WARN, this),
+            );
+        if (
+            this.team === Team.DEMON &&
+            this.otherNight > 0 &&
+            !this.reminders.some((reminder) => reminder.toLowerCase().includes('dead'))
+        )
+            err.messages.push(
+                new Message(
+                    'If this Character kills in the Night, consider adding a "DEAD" Reminder-Token to the Field reminders ',
+                    Severity.INFO,
+                    this,
+                ),
+            );
 
         return err;
     }

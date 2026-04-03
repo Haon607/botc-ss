@@ -1,16 +1,16 @@
 import { Errors, Message, Severity, Verifiable } from './common';
 import { Metadata } from './metadata';
 import { Character, Team } from './character';
-import { CharacterDetails } from '../dataset/character-details';
 import { Memory } from '../services/memory.service';
+import { CharacterDetailsService } from '../services/character-details.service';
 
 export class Script implements Verifiable {
     constructor(
         private readonly elements: (string | Character | Metadata)[],
         public type: ScriptType,
         public identifier: string,
+        private cDS?: CharacterDetailsService,
     ) {}
-
     public get metadata(): Metadata {
         const metadata = this.elements.find((element) => element instanceof Metadata);
         if (metadata) return metadata;
@@ -18,10 +18,12 @@ export class Script implements Verifiable {
     }
 
     public get characters(): Character[] {
-        return this.elements.filter((element) => typeof element === 'string' || element instanceof Character).map((element) => CharacterDetails.toCharacter(element));
+        return this.elements
+            .filter((element) => typeof element === 'string' || element instanceof Character)
+            .map((element) => this.cDS!.toCharacter(element));
     }
 
-    static deserialize(deadScript: string | Script): Script {
+    static deserialize(deadScript: string | Script, cDS: CharacterDetailsService): Script {
         /*TODO ugly ahh method*/
         if (typeof deadScript === 'string') {
             /*TODO pop up*/
@@ -38,6 +40,7 @@ export class Script implements Verifiable {
                 }),
                 answer === 'T' ? ScriptType.TEENSYVILLE : ScriptType.RAVENSWOOD_BLUFF,
                 crypto.randomUUID(),
+                cDS,
             );
         } else
             return new Script(
@@ -48,6 +51,7 @@ export class Script implements Verifiable {
                 }),
                 deadScript.type,
                 deadScript.identifier,
+                cDS,
             );
     }
 
@@ -58,10 +62,14 @@ export class Script implements Verifiable {
     verify(): Errors {
         const err = new Errors();
 
-        if (this.charactersOf(Team.TOWNSFOLK).length > 0) err.messages.push(new Message('At least one Townsfolk must exist', Severity.ERROR, this));
-        if (this.charactersOf(Team.OUTSIDER).length > 0) err.messages.push(new Message('At least one Outsider must exist', Severity.ERROR, this));
-        if (this.charactersOf(Team.MINION).length > 0) err.messages.push(new Message('At least one Minion must exist', Severity.ERROR, this));
-        if (this.charactersOf(Team.DEMON).length > 0) err.messages.push(new Message('At least one Demon must exist', Severity.ERROR, this));
+        if (this.charactersOf(Team.TOWNSFOLK).length > 0)
+            err.messages.push(new Message('At least one Townsfolk must exist', Severity.ERROR, this));
+        if (this.charactersOf(Team.OUTSIDER).length > 0)
+            err.messages.push(new Message('At least one Outsider must exist', Severity.ERROR, this));
+        if (this.charactersOf(Team.MINION).length > 0)
+            err.messages.push(new Message('At least one Minion must exist', Severity.ERROR, this));
+        if (this.charactersOf(Team.DEMON).length > 0)
+            err.messages.push(new Message('At least one Demon must exist', Severity.ERROR, this));
 
         switch (this.type) {
             case ScriptType.RAVENSWOOD_BLUFF:
@@ -97,9 +105,19 @@ export class Script implements Verifiable {
             } else return memoryScript;
         });
 
-        if (!scriptFound) throw new Error('Could not update script in Memory, no Script matching identifier was found in Memory.\nTried to update: ' + JSON.stringify(this));
+        if (!scriptFound)
+            throw new Error(
+                'Could not update script in Memory, no Script matching identifier was found in Memory.\nTried to update: ' +
+                    JSON.stringify(this),
+            );
 
         memory.scripts.set(scripts);
+    }
+
+    public stripped(): Script {
+        const stripped = { ...this };
+        stripped.cDS = undefined;
+        return stripped;
     }
 }
 

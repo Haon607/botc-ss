@@ -1,14 +1,16 @@
-import * as scriptSchema from '../../../public/script-schema.json';
 import Ajv from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 
 export class SchemaValidator {
-    public static validateJsonString(json: string, schema: string): 'success' | 'json_parse_failed' | 'generic_error' | string[] {
+    public static validateJsonString(
+        json: string,
+        schema: string,
+    ): 'success' | 'json_parse_failed' | 'generic_error' | string[] {
         let parsed: unknown;
 
         const ajv = new Ajv();
         addFormats(ajv);
-        const validate = ajv.compile(scriptSchema);
+        const validate = ajv.compile(schema as any);
 
         try {
             parsed = JSON.parse(json);

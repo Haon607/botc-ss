@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { shareReplay, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -8,13 +8,13 @@ import { shareReplay, tap } from 'rxjs/operators';
 })
 export class ResourceHttpService {
     private readonly cache = new Map<string, any>();
-    private readonly inFlightRequests = new Map<string, Observable<any>>();
+    private readonly inFlightRequests = new Map<string, Promise<any>>();
 
     constructor(private readonly http: HttpClient) {}
 
-    get<T>(url: string): Observable<T> {
+    async get<T>(url: string): Promise<T> {
         if (this.cache.has(url)) {
-            return of(this.cache.get(url));
+            return this.cache.get(url);
         }
 
         if (this.inFlightRequests.has(url)) {
@@ -29,9 +29,14 @@ export class ResourceHttpService {
             shareReplay(1),
         );
 
-        this.inFlightRequests.set(url, request$);
+        const promise = firstValueFrom(request$).catch((error) => {
+            this.inFlightRequests.delete(url);
+            throw error;
+        });
 
-        return request$;
+        this.inFlightRequests.set(url, promise);
+
+        return promise;
     }
 
     clear(url: string): void {

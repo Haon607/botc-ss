@@ -1,10 +1,13 @@
 <span>{{ script.metadata.name }} - {{ script.metadata.author }}</span>
-<ul class="list bg-base-100 rounded-box shadow-md w-80">
+<ul class="list bg-base-100 rounded-box shadow-md">
     <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Characters</li>
 
     @for (character of script.characters; track character.id) {
         <li class="list-row">
-            <app-character-component [character]="character"></app-character-component>
+            <app-character-component
+                [character]="character"
+                class="w-130"
+            />
         </li>
 
     }

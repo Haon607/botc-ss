@@ -6,6 +6,7 @@ import { addScript, importScript, plus } from '../../../icons';
 import { SchemaValidator } from '../../../services/schema-validator';
 import { Botc } from '../../../services/botc-resource.service';
 import { DialogService } from '../../subcomponents/dialog.component/dialog.service';
+import { CharacterDetailsService } from '../../../services/character-details.service';
 
 @Component({
     selector: 'app-workspace.component',
@@ -25,6 +26,7 @@ export class WorkspaceComponent {
         private readonly memory: Memory,
         private readonly botc: Botc,
         private readonly dialog: DialogService,
+        private readonly cDS: CharacterDetailsService,
     ) {
         this.scripts = memory.scripts.get() ?? [];
 
@@ -36,46 +38,51 @@ export class WorkspaceComponent {
     protected async pasteImport() {
         const raw = await navigator.clipboard.readText();
 
-        this.botc.schema().subscribe({
-            next: (schema) => {
-                const result = SchemaValidator.validateJsonString(raw, schema);
+        let schema: string;
+        try {
+            schema = await this.botc.schema();
+        } catch (error) {
+            this.dialog.error.next('Could not fetch json-schema: \n' + error);
+            return;
+        }
 
-                const paste_modal = document.getElementById('paste_modal') as HTMLDialogElement;
+        const result = SchemaValidator.validateJsonString(raw, schema);
 
-                this.importError = '';
+        const paste_modal = document.getElementById('paste_modal') as HTMLDialogElement;
 
-                paste_modal.close();
+        this.importError = '';
 
-                switch (result) {
-                    case 'success':
-                        break;
-                    case 'generic_error':
-                        this.importError = "This shouldn't happen, if it did... curious...";
-                        break;
-                    case 'json_parse_failed':
-                        this.importError = 'Pasted content could not be parsed into a JSON';
-                        break;
-                    default:
-                        console.error('Json schema validation failed', result);
-                        this.importError = 'JSON schema validation failed (details in console)';
-                }
+        paste_modal.close();
 
-                if (this.importError.length > 0) {
-                    this.dialog.error.next('Could not import Script: \n' + this.importError);
-                    return;
-                }
+        switch (result) {
+            case 'success':
+                break;
+            case 'generic_error':
+                this.importError = "This shouldn't happen, if it did... curious...";
+                break;
+            case 'json_parse_failed':
+                this.importError = 'Pasted content could not be parsed into a JSON';
+                break;
+            default:
+                console.error('Json schema validation failed', result);
+                this.importError = 'JSON schema validation failed (details in console)';
+        }
 
-                try {
-                    const scripts = this.memory.scripts.get() ?? [];
-                    scripts.push(Script.deserialize(raw));
-                    this.memory.scripts.set(scripts);
-                } catch (e) {
-                    console.error('Converting JSON into Objects failed!', e);
-                    this.importError = 'Converting JSON into Objects failed (details in console)';
-                }
-            },
-            error: (err) => this.dialog.error.next('Could not fetch json-schema: \n' + err),
-        });
+        if (this.importError.length > 0) {
+            this.dialog.error.next('Could not import Script: \n' + this.importError);
+            return;
+        }
+
+        const scripts = this.memory.scripts.get() ?? [];
+
+        try {
+            scripts.push(Script.deserialize(raw, this.cDS));
+        } catch (e) {
+            console.error('Converting JSON into Objects failed!', e);
+            this.importError = 'Converting JSON into Objects failed (details in console)';
+        }
+
+        this.memory.scripts.set(scripts);
     }
 
     protected newScript() {}
