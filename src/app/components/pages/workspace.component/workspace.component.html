@@ -1,0 +1,40 @@
+<div class="flex column">
+    @for (script of scripts; track script.identifier) {
+        <app-script-component
+            [script]="script"
+        />
+    }
+    <div class="divider"></div>
+</div>
+
+<div class="fab">
+    <button class="btn btn-lg btn-circle btn-primary" onclick="paste_modal.showModal()">
+        <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
+            <path [attr.d]="update"/>
+        </svg>
+    </button>
+</div>
+
+<dialog class="modal" id="paste_modal">
+    <div class="modal-box">
+        <h3 class="text-lg font-bold">Import Script</h3>
+        <button (click)="pasteImport()">Paste Script</button>
+    </div>
+    <form class="modal-backdrop" method="dialog">
+        <button>close</button>
+    </form>
+</dialog>
+
+<dialog class="modal" id="error_paste_modal">
+    <div class="modal-box">
+        <div role="alert" class="alert alert-error alert-soft">
+            <span>Could not import Script: {{importError}}</span>
+        </div>
+    </div>
+    <form class="modal-backdrop" method="dialog">
+        <button>close</button>
+    </form>
+</dialog>
+
+
+

@@ -2,11 +2,14 @@ import {Errors, Message, Severity, Verifiable} from './common';
 import {Metadata} from './metadata';
 import {Character, Team} from './character';
 import {CharacterDetails} from '../dataset/character-details';
+import {Store} from '../services/store';
+import {Memory} from '../services/memory.service';
 
 export class Script implements Verifiable {
     constructor(
         private readonly elements: (string | Character | Metadata)[],
         public type: ScriptType,
+        public identifier: string,
     ) {
     }
 
@@ -35,8 +38,8 @@ export class Script implements Verifiable {
                     return Character.deserialize(element);
                 return element
             }),
-
-            answer === 'T' ? ScriptType.TEENSYVILLE : ScriptType.RAVENSWOOD_BLUFF
+            answer === 'T' ? ScriptType.TEENSYVILLE : ScriptType.RAVENSWOOD_BLUFF,
+            crypto.randomUUID()
         );
     }
 
@@ -70,6 +73,29 @@ export class Script implements Verifiable {
 
     public export(): string {
         return JSON.stringify(this.elements)
+    }
+
+    /**
+     * No clue what flush means,
+     * methods updates this Script in the List-of-Script from the Memory.
+     * This Method searches for the same "identifier" and updates any script the identifier matched.
+     * If no script matching identifier is found, throws an error.
+     * @param memory
+     */
+    public flush(memory: Memory): void {
+        let scripts = memory.scripts.get() ?? [];
+        let scriptFound = false;
+
+        scripts = scripts.map(memoryScript => {
+            if (memoryScript.identifier === this.identifier) {
+                scriptFound = true;
+                return this;
+            } else return memoryScript;
+        });
+
+        if (!scriptFound) throw new Error("Could not update script in Memory, no Script matching identifier was found in Memory.\nTried to update: " + JSON.stringify(this));
+
+        memory.scripts.set(scripts);
     }
 }
 

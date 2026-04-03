@@ -1,16 +1,16 @@
 import {Component} from '@angular/core';
-import {ScriptComponent} from './components/script.component/script.component';
-import {Script} from './model/script';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
     selector: 'app-root',
     imports: [
-        ScriptComponent
+        RouterOutlet
     ],
     templateUrl: './app.html',
     styleUrl: './app.css'
 })
 export class App {
+    /*
     protected script: Script = Script.deserialize(
         '[\n' +
         '  {\n' +
@@ -71,5 +71,5 @@ export class App {
         '  "sentinel"\n' +
         ']'
     )
-
+    */
 }
