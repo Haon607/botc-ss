@@ -20,7 +20,7 @@ export class DialogComponent {
         private readonly dialogService: DialogService,
         private readonly cdr: ChangeDetectorRef,
     ) {
-        dialogService.openDialog.subscribe(errorMessage => {
+        dialogService.error.subscribe(errorMessage => {
             this.displayPopUp(errorMessage);
         })
     }

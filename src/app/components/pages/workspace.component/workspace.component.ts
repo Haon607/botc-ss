@@ -63,7 +63,7 @@ export class WorkspaceComponent {
                 }
 
                 if (this.importError.length > 0) {
-                    this.dialog.openDialog.next("Could not import Script: \n" + this.importError);
+                    this.dialog.error.next("Could not import Script: \n" + this.importError);
                     return;
                 }
 
@@ -76,7 +76,7 @@ export class WorkspaceComponent {
                     this.importError = "Converting JSON into Objects failed (details in console)";
                 }
             },
-            error: err => undefined
+            error: err => this.dialog.error.next("Could not fetch json-schema: \n" + err)
         })
     }
 }
