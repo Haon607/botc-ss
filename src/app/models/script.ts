@@ -20,12 +20,7 @@ export class Script implements Verifiable {
     public get characters(): DetailedCharacter[] {
         return this.elements
             .filter((element) => typeof element === 'string' || element instanceof Character)
-            .map((element) => {
-                return {
-                    details: this.cDS!.toCharacter(element),
-                    originalElement: element,
-                };
-            });
+            .map((element) => this.cDS!.toCharacter(element));
     }
 
     static deserialize(deadScript: string | Script, cDS: CharacterDetailsService): Script {
