@@ -3,16 +3,36 @@
         <app-script-component
             [script]="script"
         />
-    <div class="divider h-full m-1"></div>
+        <div class="divider h-full m-1"></div>
     }
 </div>
 
-<div class="fab">
-    <button class="btn btn-lg btn-circle btn-primary" onclick="paste_modal.showModal()">
+<div class="fab fab-flower">
+    <button tabindex="0" class="btn btn-lg btn-circle btn-primary">
         <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
-            <path [attr.d]="update"/>
+            <path [attr.d]="plus" />
         </svg>
     </button>
+
+    <div class="fab-close">
+        <span class="btn btn-circle btn-lg btn-error">✕</span>
+    </div>
+
+    <div class="tooltip tooltip-left" data-tip="Import Script">
+        <button class="btn btn-lg btn-circle btn-primary" onclick="paste_modal.showModal()">
+            <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
+                <path [attr.d]="importScript" />
+            </svg>
+        </button>
+    </div>
+
+    <div class="tooltip" data-tip="New Script">
+        <button class="btn btn-lg btn-circle btn-primary" (click)="newScript()">
+            <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
+                <path [attr.d]="addScript" />
+            </svg>
+        </button>
+    </div>
 </div>
 
 <dialog class="modal" id="paste_modal">

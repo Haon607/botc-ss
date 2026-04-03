@@ -1,36 +1,34 @@
-import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {Memory} from '../../../services/memory.service';
-import {Script} from '../../../models/script';
-import {ScriptComponent} from '../../subcomponents/script.component/script.component';
-import {crossInCircle, update} from '../../../icons';
-import {SchemaValidator} from '../../../services/schema-validator';
-import {Botc} from '../../../services/botc-resource.service';
-import {DialogComponent} from '../../subcomponents/dialog.component/dialog.component';
-import {DialogService} from '../../subcomponents/dialog.component/dialog.service';
+import { Component } from '@angular/core';
+import { Memory } from '../../../services/memory.service';
+import { Script } from '../../../models/script';
+import { ScriptComponent } from '../../subcomponents/script.component/script.component';
+import { addScript, importScript, plus } from '../../../icons';
+import { SchemaValidator } from '../../../services/schema-validator';
+import { Botc } from '../../../services/botc-resource.service';
+import { DialogService } from '../../subcomponents/dialog.component/dialog.service';
 
 @Component({
     selector: 'app-workspace.component',
-    imports: [
-        ScriptComponent
-    ],
+    imports: [ScriptComponent],
     templateUrl: './workspace.component.html',
     styleUrl: './workspace.component.css',
-    standalone: true
+    standalone: true,
 })
 export class WorkspaceComponent {
     protected scripts: Script[];
     protected importError: string = '';
-    protected readonly update = update;
-    protected readonly crossInCircle = crossInCircle;
+    protected readonly importScript = importScript;
+    protected readonly addScript = addScript;
+    protected readonly plus = plus;
 
     constructor(
         private readonly memory: Memory,
         private readonly botc: Botc,
         private readonly dialog: DialogService,
     ) {
-        this.scripts = memory.scripts.get() ?? []
+        this.scripts = memory.scripts.get() ?? [];
 
-        memory.scripts.changeSubject.subscribe(change => {
+        memory.scripts.changeSubject.subscribe((change) => {
             this.scripts = change ?? [];
         });
     }
@@ -39,7 +37,7 @@ export class WorkspaceComponent {
         const raw = await navigator.clipboard.readText();
 
         this.botc.schema().subscribe({
-            next: schema => {
+            next: (schema) => {
                 const result = SchemaValidator.validateJsonString(raw, schema);
 
                 const paste_modal = document.getElementById('paste_modal') as HTMLDialogElement;
@@ -58,25 +56,27 @@ export class WorkspaceComponent {
                         this.importError = 'Pasted content could not be parsed into a JSON';
                         break;
                     default:
-                        console.error("Json schema validation failed", result)
-                        this.importError = "JSON schema validation failed (details in console)";
+                        console.error('Json schema validation failed', result);
+                        this.importError = 'JSON schema validation failed (details in console)';
                 }
 
                 if (this.importError.length > 0) {
-                    this.dialog.error.next("Could not import Script: \n" + this.importError);
+                    this.dialog.error.next('Could not import Script: \n' + this.importError);
                     return;
                 }
 
                 try {
-                    const scripts = (this.memory.scripts.get() ?? [])
+                    const scripts = this.memory.scripts.get() ?? [];
                     scripts.push(Script.deserialize(raw));
                     this.memory.scripts.set(scripts);
                 } catch (e) {
-                    console.error("Converting JSON into Objects failed!", e);
-                    this.importError = "Converting JSON into Objects failed (details in console)";
+                    console.error('Converting JSON into Objects failed!', e);
+                    this.importError = 'Converting JSON into Objects failed (details in console)';
                 }
             },
-            error: err => this.dialog.error.next("Could not fetch json-schema: \n" + err)
-        })
+            error: (err) => this.dialog.error.next('Could not fetch json-schema: \n' + err),
+        });
     }
+
+    protected newScript() {}
 }
