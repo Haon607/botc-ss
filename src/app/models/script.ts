@@ -25,7 +25,7 @@ export class Script implements Verifiable {
     }
 
     static deserialize(deadScript: string | Script): Script { /*TODO ugly ahh method*/
-        if (typeof deadScript === "string") {
+        if (typeof deadScript === "string") { /*TODO pop up*/
             let answer: string | null;
             do {
                 answer = prompt("(R)avenswood_Bluff or (T)eensyville?", "R");

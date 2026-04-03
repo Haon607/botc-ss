@@ -3,7 +3,7 @@ import Ajv from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 
 export class SchemaValidator {
-    public static validateJsonString(json: string): 'success' | 'json_parse_failed' | 'generic_error' | string[] {
+    public static validateJsonString(json: string, schema: string): 'success' | 'json_parse_failed' | 'generic_error' | string[] {
         let parsed: unknown;
 
         const ajv = new Ajv();

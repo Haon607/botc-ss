@@ -1,12 +1,16 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
+import {crossInCircle} from './icons';
+import {DialogComponent} from './components/subcomponents/dialog.component/dialog.component';
 
 @Component({
     selector: 'app-root',
     imports: [
-        RouterOutlet
+        RouterOutlet,
+        DialogComponent
     ],
     templateUrl: './app.html',
+    standalone: true,
     styleUrl: './app.css'
 })
 export class App {
@@ -72,4 +76,5 @@ export class App {
         ']'
     )
     */
+    protected readonly crossInCircle = crossInCircle;
 }
