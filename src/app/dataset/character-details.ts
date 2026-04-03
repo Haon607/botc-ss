@@ -1,11 +1,13 @@
-import {Character, Team} from '../model/character';
+import { Character, Team } from '../model/character';
+import { Data } from './data';
 
 export class CharacterDetails {
-  constructor() {
-  }
+  constructor() {}
 
   public static toCharacter(idOrCustomCharacter: Character | string): Character {
     if (idOrCustomCharacter instanceof Character) return idOrCustomCharacter;
-    return new Character(idOrCustomCharacter, idOrCustomCharacter, idOrCustomCharacter, Team.TOWNSFOLK, idOrCustomCharacter, idOrCustomCharacter, 0, null, 0, null, [], false);
+    const character = Data.characters.find(character => character.id === idOrCustomCharacter);
+    if (!character) throw new Error(`No built-in Character with id ${idOrCustomCharacter} found`);
+    return character;
   }
 }
