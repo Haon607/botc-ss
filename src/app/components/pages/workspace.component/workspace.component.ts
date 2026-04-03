@@ -1,9 +1,9 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {Memory} from '../../../services/memory.service';
-import {Script} from '../../../model/script';
+import {Script} from '../../../models/script';
 import {ScriptComponent} from '../../subcomponents/script.component/script.component';
-import {update} from '../../../icons';
-import {SchemaValidator} from '../../../model/schema-validator';
+import {crossInCircle, update} from '../../../icons';
+import {SchemaValidator} from '../../../services/schema-validator';
 
 @Component({
     selector: 'app-workspace.component',
@@ -16,15 +16,19 @@ import {SchemaValidator} from '../../../model/schema-validator';
 export class WorkspaceComponent {
     protected scripts: Script[];
     protected importError: string = '';
+    protected readonly update = update;
+    protected readonly crossInCircle = crossInCircle;
 
     constructor(
         private readonly memory: Memory,
         private readonly cdr: ChangeDetectorRef
     ) {
         this.scripts = memory.scripts.get() ?? []
-    }
 
-    protected readonly update = update;
+        memory.scripts.changeSubject.subscribe(change => {
+            this.scripts = change ?? [];
+        })
+    }
 
     protected async pasteImport() {
         const raw = await navigator.clipboard.readText();
@@ -33,6 +37,8 @@ export class WorkspaceComponent {
 
         const error_paste_modal = document.getElementById('error_paste_modal') as HTMLDialogElement;
         const paste_modal = document.getElementById('paste_modal') as HTMLDialogElement;
+
+        this.importError = '';
 
         paste_modal.close();
 
@@ -54,6 +60,15 @@ export class WorkspaceComponent {
             this.cdr.detectChanges();
             error_paste_modal.showModal();
             return;
+        }
+
+        try {
+            const scripts = (this.memory.scripts.get() ?? [])
+            scripts.push(Script.deserialize(raw));
+            this.memory.scripts.set(scripts);
+        } catch (e) {
+            console.error("Converting JSON into Objects failed!", e);
+            this.importError = "Converting JSON into Objects failed (details in console)";
         }
     }
 }

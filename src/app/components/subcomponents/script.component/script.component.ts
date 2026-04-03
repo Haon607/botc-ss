@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Script} from '../../../model/script';
+import {Script} from '../../../models/script';
 import {CharacterComponent} from '../character.component/character.component';
 
 @Component({

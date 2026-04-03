@@ -1,4 +1,4 @@
-import {Character, Team} from '../model/character';
+import {Character, Team} from '../models/character';
 
 export class Data {
     private static readonly raws: {

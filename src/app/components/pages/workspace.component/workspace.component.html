@@ -16,9 +16,9 @@
 </div>
 
 <dialog class="modal" id="paste_modal">
-    <div class="modal-box">
-        <h3 class="text-lg font-bold">Import Script</h3>
-        <button (click)="pasteImport()">Paste Script</button>
+    <div class="modal-box flex flex-row items-center">
+        <h3 class="text-lg font-bold grow">Import Script</h3>
+        <button class="btn btn-primary" (click)="pasteImport()">Paste Script</button>
     </div>
     <form class="modal-backdrop" method="dialog">
         <button>close</button>
@@ -28,6 +28,9 @@
 <dialog class="modal" id="error_paste_modal">
     <div class="modal-box">
         <div role="alert" class="alert alert-error alert-soft">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="crossInCircle" />
+            </svg>
             <span>Could not import Script: {{importError}}</span>
         </div>
     </div>

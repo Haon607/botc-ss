@@ -1,4 +1,4 @@
-import {Character} from '../model/character';
+import {Character} from '../models/character';
 import {Data} from './data';
 
 export class CharacterDetails {
