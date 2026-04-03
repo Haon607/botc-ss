@@ -11,5 +11,5 @@ import {CharacterComponent} from '../character.component/character.component';
     styleUrl: './script.component.css',
 })
 export class ScriptComponent {
-    @Input({required: true}) script!: Script;
+    @Input({required: true}) script?: Script;
 }
