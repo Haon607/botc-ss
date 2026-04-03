@@ -63,7 +63,7 @@ export class WorkspaceComponent {
                 }
 
                 if (this.importError.length > 0) {
-                    this.dialog.openDialog.next("Could not import Script: " + this.importError);
+                    this.dialog.openDialog.next("Could not import Script: \n" + this.importError);
                     return;
                 }
 
