@@ -6,7 +6,7 @@ import { CharacterDetailsService } from '../services/character-details.service';
 
 export class Script implements Verifiable {
     constructor(
-        private readonly elements: (string | Character | Metadata)[],
+        private elements: (string | Character | Metadata)[],
         public type: ScriptType,
         public identifier: string,
         private cDS?: CharacterDetailsService,
@@ -62,13 +62,13 @@ export class Script implements Verifiable {
     verify(): Errors {
         const err = new Errors();
 
-        if (this.charactersOf(Team.TOWNSFOLK).length > 0)
+        if (this.charactersOf(Team.TOWNSFOLK).length === 0)
             err.messages.push(new Message('At least one Townsfolk must exist', Severity.ERROR, this));
-        if (this.charactersOf(Team.OUTSIDER).length > 0)
+        if (this.charactersOf(Team.OUTSIDER).length === 0)
             err.messages.push(new Message('At least one Outsider must exist', Severity.ERROR, this));
-        if (this.charactersOf(Team.MINION).length > 0)
+        if (this.charactersOf(Team.MINION).length === 0)
             err.messages.push(new Message('At least one Minion must exist', Severity.ERROR, this));
-        if (this.charactersOf(Team.DEMON).length > 0)
+        if (this.charactersOf(Team.DEMON).length === 0)
             err.messages.push(new Message('At least one Demon must exist', Severity.ERROR, this));
 
         switch (this.type) {
@@ -114,10 +114,17 @@ export class Script implements Verifiable {
         memory.scripts.set(scripts);
     }
 
-    public stripped(): Script {
+    public stripped(): this {
         const stripped = { ...this };
         stripped.cDS = undefined;
         return stripped;
+    }
+
+    public removeElement(elementToRemove: Character | string, memory: Memory) {
+        this.elements = this.elements.filter((element) => {
+            return element !== elementToRemove;
+        });
+        this.flush(memory);
     }
 }
 

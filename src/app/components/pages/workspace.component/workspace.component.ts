@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Memory } from '../../../services/memory.service';
 import { Script } from '../../../models/script';
 import { ScriptComponent } from '../../subcomponents/script.component/script.component';
-import { addScript, importScript, plus } from '../../../icons';
+import { icon } from '../../../icons';
 import { SchemaValidator } from '../../../services/schema-validator';
 import { Botc } from '../../../services/botc-resource.service';
 import { DialogService } from '../../subcomponents/dialog.component/dialog.service';
@@ -18,9 +18,7 @@ import { CharacterDetailsService } from '../../../services/character-details.ser
 export class WorkspaceComponent {
     protected scripts: Script[];
     protected importError: string = '';
-    protected readonly importScript = importScript;
-    protected readonly addScript = addScript;
-    protected readonly plus = plus;
+    protected readonly icon = icon;
 
     constructor(
         private readonly memory: Memory,
@@ -30,8 +28,8 @@ export class WorkspaceComponent {
     ) {
         this.scripts = memory.scripts.get() ?? [];
 
-        memory.scripts.changeSubject.subscribe((change) => {
-            this.scripts = change ?? [];
+        memory.scripts.changes.subscribe((change) => {
+            this.scripts = change;
         });
     }
 
@@ -42,7 +40,7 @@ export class WorkspaceComponent {
         try {
             schema = await this.botc.schema();
         } catch (error) {
-            this.dialog.error.next('Could not fetch json-schema: \n' + error);
+            this.dialog.error.next('Could not fetch json-schema:\n' + error);
             return;
         }
 
@@ -69,7 +67,7 @@ export class WorkspaceComponent {
         }
 
         if (this.importError.length > 0) {
-            this.dialog.error.next('Could not import Script: \n' + this.importError);
+            this.dialog.error.next('Could not import Script:\n' + this.importError);
             return;
         }
 

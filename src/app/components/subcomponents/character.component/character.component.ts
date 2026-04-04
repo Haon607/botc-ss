@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { convertToCustomCharacter, editCustomCharacter, plus, trash } from '../../../icons';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { icon } from '../../../icons';
 import { DetailedCharacter } from '../../../models/character';
 
 @Component({
@@ -11,13 +11,14 @@ import { DetailedCharacter } from '../../../models/character';
 })
 export class CharacterComponent {
     @Input({ required: true }) character!: DetailedCharacter;
-    protected readonly trash = trash;
-    protected readonly plus = plus;
+    @Output() removeCharacter: EventEmitter<DetailedCharacter> = new EventEmitter();
+    protected readonly icon = icon;
 
     protected get isCustomCharacter() {
         return typeof this.character.originalElement !== 'string';
     }
 
-    protected readonly editCustomCharacter = editCustomCharacter;
-    protected readonly convertToCustomCharacter = convertToCustomCharacter;
+    protected removeCharacterFromScript() {
+        this.removeCharacter.emit(this.character);
+    }
 }

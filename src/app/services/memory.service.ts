@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from './store';
 import { Script } from '../models/script';
 import { CharacterDetailsService } from './character-details.service';
+import { map, Observable, Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -19,6 +20,10 @@ class ScriptStore extends Store<Script[]> {
         super('scripts');
     }
 
+    public get changes(): Observable<Script[]> {
+        return this.changeSubject.pipe(map((x) => this.toObjects(x ?? [])));
+    }
+
     public override set(toSet: Script[]) {
         const scripts = toSet.map((script) => script.stripped());
         return super.set(scripts);
@@ -28,7 +33,7 @@ class ScriptStore extends Store<Script[]> {
         return this.toObjects(super.get() ?? []);
     }
 
-    private toObjects(scripts: any[]): Script[] {
+    public toObjects(scripts: any[]): Script[] {
         return scripts.map((script) => Script.deserialize(script, this.cDS));
     }
 }

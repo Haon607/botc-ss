@@ -1,50 +1,74 @@
 <div class="flex flex-col h-screen overflow-hidden">
-    <span class="shrink-0 font-extraboldt">
-        <input>
-        {{ script.metadata.name }} - {{ script.metadata.author }}
+    <span class="shrink-0 font-extraboldt flex justify-around pl-10 pr-10">
+        <div class="flex grow justify-between">
+            <fieldset class="fieldset grow">
+                <input [(ngModel)]="script.metadata.name" class="input" placeholder="Name" type="text" />
+            </fieldset>
+            <fieldset class="fieldset grow">
+                <input [(ngModel)]="script.metadata.author" class="input" placeholder="Author" type="text" />
+            </fieldset>
+        </div>
+        <div class="flex items-center">
+            <button class="btn btn-square btn-ghost tooltip tooltip-bottom" data-tip="Show Validation" (click)="showValidation()">
+                <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
+                    <path [attr.d]="script.verify().valid() ? icon.valid : icon.invalid" />
+                </svg>
+            </button>
+            <button class="btn btn-square btn-ghost tooltip tooltip-bottom tooltip-error" data-tip="Delete Script">
+                <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
+                    <path [attr.d]="icon.trash" />
+                </svg>
+            </button>
+        </div>
     </span>
 
-    <ul class="flex-1 overflow-auto box-border pb-4 list w-140 bg-base-100 rounded-box shadow-md">
-        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">TOWNSFOLK</li>
+    <ul class="flex-2 overflow-auto box-border pb-4 list w-170 bg-base-100 rounded-box shadow-md">
+        <li class="{{classes.characterListEntry}}">TOWNSFOLK</li>
         @for (character of script.charactersOf(Team.TOWNSFOLK); track character.details.id) {
             <li class="list-row">
                 <app-character-component
                     [character]="character"
-                    class="w-130"
+                    (removeCharacter)="removeCharacter($event)"
+                    class="{{classes.characterComponent}}"
                 />
             </li>
         }
 
-        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">OUTSIDER</li>
+        <li class="{{classes.characterListEntry}}">OUTSIDER</li>
         @for (character of script.charactersOf(Team.OUTSIDER); track character.details.id) {
             <li class="list-row">
                 <app-character-component
                     [character]="character"
-                    class="w-130"
+                    (removeCharacter)="removeCharacter($event)"
+                    class="{{classes.characterComponent}}"
                 />
             </li>
         }
 
-        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">MINIONS</li>
+        <li class="{{classes.characterListEntry}}">MINIONS</li>
         @for (character of script.charactersOf(Team.MINION); track character.details.id) {
             <li class="list-row">
                 <app-character-component
                     [character]="character"
-                    class="w-130"
+                    (removeCharacter)="removeCharacter($event)"
+                    class="{{classes.characterComponent}}"
                 />
             </li>
         }
 
-        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">DEMONS</li>
+        <li class="{{classes.characterListEntry}}">DEMONS</li>
         @for (character of script.charactersOf(Team.DEMON); track character.details.id) {
             <li class="list-row">
                 <app-character-component
                     [character]="character"
-                    class="w-130"
+                    (removeCharacter)="removeCharacter($event)"
+                    class="{{classes.characterComponent}}"
                 />
             </li>
         }
 
     </ul>
 </div>
+
+
 

@@ -3,14 +3,13 @@
         <app-script-component
             [script]="script"
         />
-        <div class="divider h-full m-1"></div>
     }
 </div>
 
 <div class="fab fab-flower">
     <button class="btn btn-lg btn-circle btn-primary" tabindex="0">
         <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
-            <path [attr.d]="plus" />
+            <path [attr.d]="icon.plus" />
         </svg>
     </button>
 
@@ -21,7 +20,7 @@
     <div class="tooltip tooltip-left" data-tip="Import Script">
         <button class="btn btn-lg btn-circle btn-primary" onclick="paste_modal.showModal()">
             <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
-                <path [attr.d]="importScript" />
+                <path [attr.d]="icon.importScript" />
             </svg>
         </button>
     </div>
@@ -29,7 +28,7 @@
     <div class="tooltip" data-tip="New Script">
         <button (click)="newScript()" class="btn btn-lg btn-circle btn-primary">
             <svg fill="currentColor" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">
-                <path [attr.d]="addScript" />
+                <path [attr.d]="icon.addScript" />
             </svg>
         </button>
     </div>
