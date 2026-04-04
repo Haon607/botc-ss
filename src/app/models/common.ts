@@ -1,3 +1,7 @@
+import { Script } from './script';
+import { Character } from './character';
+import { Metadata } from './metadata';
+
 export interface Verifiable {
     verify(): Errors;
 }
@@ -9,8 +13,20 @@ export class Errors {
         return Math.max(...this.messages.map((message) => message.severity), Severity.NONE);
     }
 
+    public get errors() {
+        return this.messages.filter((message) => message.severity === Severity.ERROR);
+    }
+
+    public get warnings() {
+        return this.messages.filter((message) => message.severity === Severity.WARN);
+    }
+
+    public get infos() {
+        return this.messages.filter((message) => message.severity === Severity.INFO);
+    }
+
     public valid(): boolean {
-        return this.messages.filter((message) => message.severity === Severity.ERROR).length === 0;
+        return this.errors.length === 0;
     }
 }
 
@@ -22,13 +38,20 @@ export enum Severity {
 }
 
 export class Message {
-    public causedBy: Verifiable[];
+    public causedBy: string;
 
     public constructor(
         public content: string,
         public severity: Severity,
         ...causedBy: Verifiable[]
     ) {
-        this.causedBy = causedBy;
+        this.causedBy = causedBy
+            .map((obj) => {
+                if (obj instanceof Script) return 'Script[' + obj.metadata.name + ' by ' + obj.metadata.author + ']';
+                if (obj instanceof Character) return 'Character[' + obj.id + ']';
+                if (obj instanceof Metadata) return 'Metadata';
+                return JSON.stringify(obj);
+            })
+            .join(' -> ');
     }
 }

@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { icon } from '../../../icons';
 import { DialogService } from './dialog.service';
-import { Errors } from '../../../models/common';
+import { Errors, Severity } from '../../../models/common';
+import { classes } from './dialog.component.style';
 
 @Component({
     selector: 'app-dialog-component',
@@ -33,8 +34,11 @@ export class DialogComponent {
 
     private validationPopUpdisplayPopUp(validations: Errors): void {
         const modal = document.getElementById('validation_modal') as HTMLDialogElement;
-        this.validationMessages = validations;
+        if (validations.highestLevel === Severity.NONE) this.validationMessages = undefined;
+        else this.validationMessages = validations;
         this.cdr.detectChanges();
         modal.showModal();
     }
+
+    protected readonly classes = classes;
 }

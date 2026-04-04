@@ -20,11 +20,36 @@
         <form method="dialog">
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
-        <div class="alert alert-error alert-soft flex flex-col" role="alert">
-            @for (message of validationMessages?.messages; track message) {
-                <p class="tooltip" [attr.data-tip]="message.causedBy">{{ message.content }}</p>
+        @if (validationMessages) {
+            <span class="font-bold">Following Issues found:</span>
+            @if (validationMessages.errors.length > 0) {
+                <p class="{{classes.alertTypeHeader}}">Errors:</p>
+                <ul class="{{classes.alert}} alert-error">
+                    @for (message of validationMessages.errors; track message.causedBy + message.content) {
+                        <li [attr.data-tip]="message.causedBy" class="tooltip">{{ message.content }}</li>
+                    }
+                </ul>
             }
-        </div>
+            @if (validationMessages.warnings.length > 0) {
+                <p class="{{classes.alertTypeHeader}}">Warnings:</p>
+                <ul class="{{classes.alert}} alert-warning">
+                    @for (message of validationMessages.warnings; track message.causedBy + message.content) {
+                        <li [attr.data-tip]="message.causedBy" class="tooltip">{{ message.content }}</li>
+                    }
+                </ul>
+            }
+            @if (validationMessages.infos.length > 0) {
+                <p class="{{classes.alertTypeHeader}}">Infos:</p>
+                <ul class="{{classes.alert}} alert-info">
+                    @for (message of validationMessages.infos; track message.causedBy + message.content) {
+                        <li [attr.data-tip]="message.causedBy" class="tooltip">{{ message.content }}</li>
+                    }
+                </ul>
+            }
+
+        } @else {
+            <span>No Messages to display</span>
+        }
     </div>
     <form class="modal-backdrop" method="dialog">
         <button>close</button>
