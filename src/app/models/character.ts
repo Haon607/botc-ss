@@ -4,17 +4,17 @@ export class Character implements Verifiable {
     constructor(
         public id: string,
         public name: string,
-        public image: string | null,
+        public image: string | undefined,
         public team: Team,
         public edition: 'carousel' | 'tb' | 'bmr' | 'generic' | 'loric' | 'fabled' | 'snv' | undefined,
         public ability: string,
-        public flavour: string,
+        public flavour: string | undefined,
         public firstNight: number,
-        public firstNightReminder: string | null,
+        public firstNightReminder: string | undefined,
         public otherNight: number,
-        public otherNightReminder: string | null,
+        public otherNightReminder: string | undefined,
         public reminders: string[],
-        public remindersGlobal: string[],
+        public remindersGlobal: string[] | undefined,
         public setup: boolean,
     ) {}
 
@@ -40,14 +40,16 @@ export class Character implements Verifiable {
     verify(): Errors {
         const err = new Errors();
 
+        console.log(this);
+
         if (this.id.trim() === '') err.messages.push(new Message('Field id empty', Severity.ERROR, this));
         if (this.name.trim() === '') err.messages.push(new Message('Field name empty', Severity.ERROR, this));
         if (this.image?.trim() === '') err.messages.push(new Message('Field image empty', Severity.ERROR, this));
         if (this.ability.trim() === '') err.messages.push(new Message('Field ability empty', Severity.ERROR, this));
-        if (this.flavour.trim() === '') err.messages.push(new Message('Field flavour empty', Severity.WARN, this));
+        if (this.flavour?.trim() === '') err.messages.push(new Message('Field flavour empty', Severity.WARN, this));
         if (this.reminders.some((reminder) => reminder.trim() === ''))
             err.messages.push(new Message('Field reminders contains an empty entry', Severity.WARN, this));
-        if (this.remindersGlobal.some((reminder) => reminder.trim() === ''))
+        if (this.remindersGlobal?.some((reminder) => reminder.trim() === ''))
             err.messages.push(new Message('Field remindersGlobal contains an empty entry', Severity.WARN, this));
 
         if (this.firstNight === 0 && this.firstNightReminder)

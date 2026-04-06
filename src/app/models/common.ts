@@ -28,6 +28,20 @@ export class Errors {
     public valid(): boolean {
         return this.errors.length === 0;
     }
+
+    public combine(error: Errors) {
+        error.messages.forEach((message) => this.messages.push());
+    }
+
+    public combineChild(parent: Verifiable, error: Errors) {
+        error.messages = error.messages.map((message) => {
+            message.causedBy.reverse();
+            message.causedBy.push(parent);
+            message.causedBy.reverse();
+            return message;
+        });
+        this.combine(error);
+    }
 }
 
 export enum Severity {
@@ -38,14 +52,18 @@ export enum Severity {
 }
 
 export class Message {
-    public causedBy: string;
+    public causedBy: Verifiable[];
 
     public constructor(
         public content: string,
         public severity: Severity,
         ...causedBy: Verifiable[]
     ) {
-        this.causedBy = causedBy
+        this.causedBy = causedBy;
+    }
+
+    public get causedByChain(): string {
+        return this.causedBy
             .map((obj) => {
                 if (obj instanceof Script) return 'Script[' + obj.metadata.name + ' by ' + obj.metadata.author + ']';
                 if (obj instanceof Character) return 'Character[' + obj.id + ']';

@@ -1,12 +1,13 @@
-import { Errors, Message, Severity, Verifiable } from './common';
+import { Errors, Verifiable } from './common';
 import { Metadata } from './metadata';
 import { Character, DetailedCharacter, Team } from './character';
 import { Memory } from '../services/memory.service';
 import { CharacterDetailsService } from '../services/character-details.service';
+import { ScriptValidator } from './script_validator';
 
 export class Script implements Verifiable {
     constructor(
-        private elements: (string | Character | Metadata)[],
+        public elements: (string | Character | Metadata)[],
         public type: ScriptType,
         public identifier: string,
         private cDS?: CharacterDetailsService,
@@ -60,44 +61,7 @@ export class Script implements Verifiable {
     }
 
     verify(): Errors {
-        const err = new Errors();
-
-        if (this.charactersOf(Team.TOWNSFOLK).length === 0)
-            err.messages.push(new Message('At least one Townsfolk must exist', Severity.ERROR, this));
-        if (this.charactersOf(Team.OUTSIDER).length === 0)
-            err.messages.push(new Message('At least one Outsider must exist', Severity.ERROR, this));
-        if (this.charactersOf(Team.MINION).length === 0)
-            err.messages.push(new Message('At least one Minion must exist', Severity.ERROR, this));
-        if (this.charactersOf(Team.DEMON).length === 0)
-            err.messages.push(new Message('At least one Demon must exist', Severity.ERROR, this));
-
-        if (this.elements.length < 5)
-            err.messages.push(new Message('Resulting JSON must have at least 5 entries', Severity.ERROR, this));
-
-        switch (this.type) {
-            case ScriptType.RAVENSWOOD_BLUFF:
-                if (this.charactersOf(Team.TOWNSFOLK).length !== 13)
-                    err.messages.push(new Message('Ideal number of Townsfolk is 13', Severity.INFO, this));
-                if (this.charactersOf(Team.OUTSIDER).length !== 4 && this.charactersOf(Team.OUTSIDER).length !== 5)
-                    err.messages.push(new Message('Ideal number of Outsiders is 4 or 5', Severity.INFO, this));
-                if (this.charactersOf(Team.MINION).length !== 4 && this.charactersOf(Team.MINION).length !== 5)
-                    err.messages.push(new Message('Ideal number of Minions is 4 or 5', Severity.INFO, this));
-                if (this.charactersOf(Team.DEMON).length < 1 || this.charactersOf(Team.DEMON).length > 4)
-                    err.messages.push(new Message('Ideal number of Demons is 1 - 4', Severity.INFO, this));
-                break;
-            case ScriptType.TEENSYVILLE:
-                if (this.charactersOf(Team.TOWNSFOLK).length !== 4)
-                    err.messages.push(new Message('Ideal number of Townsfolk is 4', Severity.INFO, this));
-                if (this.charactersOf(Team.OUTSIDER).length !== 2)
-                    err.messages.push(new Message('Ideal number of Outsiders is 2', Severity.INFO, this));
-                if (this.charactersOf(Team.MINION).length !== 2)
-                    err.messages.push(new Message('Ideal number of Minions is 2', Severity.INFO, this));
-                if (this.charactersOf(Team.DEMON).length < 1 || this.charactersOf(Team.DEMON).length > 2)
-                    err.messages.push(new Message('Ideal number of Demons is 1 - 2', Severity.INFO, this));
-                break;
-        }
-
-        return err;
+        return ScriptValidator.validate(this);
     }
 
     public export(): string {

@@ -25,24 +25,24 @@
             @if (validationMessages.errors.length > 0) {
                 <p class="{{classes.alertTypeHeader}}">Errors:</p>
                 <ul class="{{classes.alert}} alert-error">
-                    @for (message of validationMessages.errors; track message.causedBy + message.content) {
-                        <li [attr.data-tip]="message.causedBy" class="tooltip">{{ message.content }}</li>
+                    @for (message of validationMessages.errors; track message.causedByChain + message.content) {
+                        <li [attr.data-tip]="message.causedByChain" class="tooltip">{{ message.content }}</li>
                     }
                 </ul>
             }
             @if (validationMessages.warnings.length > 0) {
                 <p class="{{classes.alertTypeHeader}}">Warnings:</p>
                 <ul class="{{classes.alert}} alert-warning">
-                    @for (message of validationMessages.warnings; track message.causedBy + message.content) {
-                        <li [attr.data-tip]="message.causedBy" class="tooltip">{{ message.content }}</li>
+                    @for (message of validationMessages.warnings; track message.causedByChain + message.content) {
+                        <li [attr.data-tip]="message.causedByChain" class="tooltip">{{ message.content }}</li>
                     }
                 </ul>
             }
             @if (validationMessages.infos.length > 0) {
                 <p class="{{classes.alertTypeHeader}}">Infos:</p>
                 <ul class="{{classes.alert}} alert-info">
-                    @for (message of validationMessages.infos; track message.causedBy + message.content) {
-                        <li [attr.data-tip]="message.causedBy" class="tooltip">{{ message.content }}</li>
+                    @for (message of validationMessages.infos; track message.causedByChain + message.content) {
+                        <li [attr.data-tip]="message.causedByChain" class="tooltip">{{ message.content }}</li>
                     }
                 </ul>
             }
