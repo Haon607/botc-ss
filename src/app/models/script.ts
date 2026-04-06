@@ -71,12 +71,29 @@ export class Script implements Verifiable {
         if (this.charactersOf(Team.DEMON).length === 0)
             err.messages.push(new Message('At least one Demon must exist', Severity.ERROR, this));
 
+        if (this.elements.length < 5)
+            err.messages.push(new Message('Resulting JSON must have at least 5 entries', Severity.ERROR, this));
+
         switch (this.type) {
             case ScriptType.RAVENSWOOD_BLUFF:
-                //TODO check for character per team
+                if (this.charactersOf(Team.TOWNSFOLK).length !== 13)
+                    err.messages.push(new Message('Ideal number of Townsfolk is 13', Severity.INFO, this));
+                if (this.charactersOf(Team.OUTSIDER).length !== 4 && this.charactersOf(Team.OUTSIDER).length !== 5)
+                    err.messages.push(new Message('Ideal number of Outsiders is 4 or 5', Severity.INFO, this));
+                if (this.charactersOf(Team.MINION).length !== 4 && this.charactersOf(Team.MINION).length !== 5)
+                    err.messages.push(new Message('Ideal number of Minions is 4 or 5', Severity.INFO, this));
+                if (this.charactersOf(Team.DEMON).length < 1 || this.charactersOf(Team.DEMON).length > 4)
+                    err.messages.push(new Message('Ideal number of Demons is 1 - 4', Severity.INFO, this));
                 break;
             case ScriptType.TEENSYVILLE:
-                //TODO check for character per team
+                if (this.charactersOf(Team.TOWNSFOLK).length !== 4)
+                    err.messages.push(new Message('Ideal number of Townsfolk is 4', Severity.INFO, this));
+                if (this.charactersOf(Team.OUTSIDER).length !== 2)
+                    err.messages.push(new Message('Ideal number of Outsiders is 2', Severity.INFO, this));
+                if (this.charactersOf(Team.MINION).length !== 2)
+                    err.messages.push(new Message('Ideal number of Minions is 2', Severity.INFO, this));
+                if (this.charactersOf(Team.DEMON).length < 1 || this.charactersOf(Team.DEMON).length > 2)
+                    err.messages.push(new Message('Ideal number of Demons is 1 - 2', Severity.INFO, this));
                 break;
         }
 
