@@ -1,21 +1,22 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { icon } from '../../../icons';
-import { DialogService } from './dialog.service';
-import { Errors, Severity } from '../../../models/common';
-import { classes } from './dialog.component.style';
+import {ChangeDetectorRef, Component} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {icon} from '../../../icons';
+import {Choice, DialogService} from './dialog.service';
+import {Errors, Severity} from '../../../models/common';
+import {classes} from './dialog.component.style';
 
 @Component({
     selector: 'app-dialog-component',
     imports: [FormsModule],
     templateUrl: './dialog.component.html',
-    styleUrl: './dialog.component.css',
     standalone: true,
 })
 export class DialogComponent {
     protected errorMessage: string = '';
     protected validationMessages?: Errors = undefined;
     protected readonly icon = icon;
+    protected choice?: Choice = undefined;
+    protected readonly classes = classes;
 
     constructor(
         private readonly dialogService: DialogService,
@@ -40,5 +41,10 @@ export class DialogComponent {
         modal.showModal();
     }
 
-    protected readonly classes = classes;
+    private choicePopUpdisplayPopUp(choice: Choice): void {
+        const modal = document.getElementById('choice_modal') as HTMLDialogElement;
+        this.choice = choice;
+        this.cdr.detectChanges();
+        modal.showModal();
+    }
 }
